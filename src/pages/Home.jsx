@@ -7,31 +7,77 @@ function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [isSearching, setIsSearching] = useState(false);
 
+  // Load and append popular movies
   useEffect(() => {
-    const loadPopularMovies = async () => {
+    const loadMovies = async () => {
       try {
-        const popularMovies = await getPopularMovies();
-        setMovies(popularMovies);
+        setLoading(true);
+        const data = await getPopularMovies(page);
+        setMovies((prev) =>
+          page === 1 ? data.results : [...prev, ...data.results]
+        );
       } catch (err) {
-        console.log(err);
-        setError("Failed to load movies...");
+        console.error(err);
+        setError("Failed to load more movies");
       } finally {
         setLoading(false);
       }
     };
 
-    loadPopularMovies();
-  }, []);
+    if (!isSearching) loadMovies();
+  }, [page, isSearching]);
 
-  //const movies = [{ id: 1, title: "The Antman", release_date: 2012 }];
-
-  const handleSearch = (e) => {
+  // Handle search
+  const handleSearch = async (e) => {
     e.preventDefault();
-    alert(searchQuery);
-    setSearchQuery("");
+    if (!searchQuery.trim()) return;
+
+    setIsSearching(true);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const results = await searchMovies(searchQuery);
+      setMovies(results);
+    } catch (err) {
+      console.error(err);
+      setError("Search failed.");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // If searchQuery becomes empty, reset to popular movies
+  useEffect(() => {
+    if (searchQuery === "") {
+      setIsSearching(false);
+      setPage(1); // Reset to first page of popular movies
+    }
+  }, [searchQuery]);
+
+  // Infinite scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = window.innerHeight;
+
+      if (
+        !loading &&
+        !isSearching &&
+        scrollTop + clientHeight + 100 >= scrollHeight
+      ) {
+        setPage((prevPage) => prevPage + 1);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loading, isSearching]);
 
   return (
     <div className="home">
@@ -47,17 +93,24 @@ function Home() {
           Search
         </button>
       </form>
+
       <div className="movies-grid">
-        {loading ? (
+        {movies && movies.length > 0 ? (
+          movies.map((movie) => <MovieCard movie={movie} key={movie.id} />)
+        ) : loading ? (
           <p>Loading...</p>
         ) : error ? (
           <p>{error}</p>
-        ) : movies && movies.length > 0 ? (
-          movies.map((movie) => <MovieCard movie={movie} key={movie.id} />)
         ) : (
           <p>No movies found</p>
         )}
       </div>
+
+      {loading && (
+        <p style={{ textAlign: "center", margin: "1rem" }}>
+          Loading more movies...
+        </p>
+      )}
     </div>
   );
 }
