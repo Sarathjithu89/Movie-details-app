@@ -1,12 +1,53 @@
-# React + Vite
+# Learnig React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Simple movie detial app
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Screenshots](#screenshots)
+- [License](#license)
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Browse and search for movies
+- View information about each movie
+- Responsive UI built with React
+- Add to favorites
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/movie-app-frontend.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd movie-app-frontend
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+## Usage
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view the app in your browser.
+
+## Screenshots
+
+<!-- Add screenshots of your app here -->
+
+![Screenshot](./screenshots/app-demo.png)
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
