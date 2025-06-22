@@ -7,7 +7,7 @@ export const getPopularMovies = async (page = 1) => {
     `${BASE_URL}/movie/popular?api_key=${API_KEY}&page=${page}`
   );
   const data = await response.json();
-  return data; // Return full data, not just results
+  return data;
 };
 
 export const searchMovies = async (query) => {
